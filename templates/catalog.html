@@ -1,0 +1,29 @@
+<html>
+<body>
+
+	<h1>Catalog</h1>
+
+	<a href = '{{url_for('addCategory') }}'>Create a new Category</a>
+
+	<!-- Flashing message to confirm category was properly created -->
+	<div class = 'flash'>
+	{% with messages = get_flashed_messages() %}
+      {% if messages %}      
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+	</div>
+
+
+	<!-- Display a list of categories -->
+	{% for i in categories %}
+		<div class = 'nameAndPrice'>
+		<span class = 'name'><p>{{i.name}}</p></span>
+	{% endfor %}
+
+</body>
+</html>
