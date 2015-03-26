@@ -12,7 +12,7 @@
 <br>
 <a href = '{{url_for('itemEdit', category_id = item.category_id, item_id = item.id) }}'>Edit</a>
 <br>
-<a href = '{{url_for('itemDelete') }}'>Delete</a>
+<a href = '{{url_for('itemDelete',  category_id = item.category_id, item_id = item.id) }}'>Delete</a>
 </body>
 
 </html>

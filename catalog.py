@@ -75,9 +75,23 @@ def itemEdit(category_id, item_id):
 			return render_template('itemedit.html', item = item, categories = categories) 
 
 #Delete specific item
-@app.route('/catalog/categoryname/itemname/delete')
-def itemDelete():
-	return render_template('itemdelete.html') 
+@app.route('/catalog/<int:category_id>/<int:item_id>/delete', methods = ['GET','POST'] )
+def itemDelete(category_id, item_id):
+	itemToDelete = session.query(CategoryItem).filter_by(id = item_id).one() 
+	if request.method == 'POST':
+		session.delete(itemToDelete)
+		session.commit()
+		flash("Menu item has been deleted!")
+		return redirect(url_for('catalogMain'))
+	else:	
+		return render_template('itemdelete.html', item=itemToDelete) 
+
+#Provide JSON endpoint
+@app.route('/catalog/<int:category_id>/JSON')
+def categoryToJson(category_id):
+	category = session.query(Category).filter_by(id = category_id).one()
+	items = session.query(CategoryItem).filter_by(category_id = category_id).all()
+	return jsonify(CategoryItems=[i.serialize for i in items])
 
 if __name__ == '__main__':
 	app.secret_key = 'super_secret_key'
