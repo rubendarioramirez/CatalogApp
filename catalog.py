@@ -11,12 +11,12 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-
 #Main page - Function to display categories
 @app.route('/')
 def catalogMain():
 	categories = session.query(Category).all()
-	return render_template('catalog.html', categories=categories)
+	items = session.query(CategoryItem).all()
+	return render_template('catalog.html', categories=categories, items=items)
  
 #Add new category function
 @app.route('/catalog/addcategory', methods=['GET','POST'])
@@ -56,10 +56,23 @@ def item(category_id, item_id):
 	return render_template('item.html', item = item) 
 
 #Edit specific item
-@app.route('/catalog/<int:category_id>/<int:item_id>/edit')
+@app.route('/catalog/<int:category_id>/<int:item_id>/edit', methods=['GET','POST'])
 def itemEdit(category_id, item_id):
-	item = session.query(CategoryItem).filter_by(id = item_id).one()
-	return render_template('itemedit.html', item = item) 
+	editedItem = session.query(CategoryItem).filter_by(id = item_id).one()
+	if request.method == 'POST':
+		if request.form['name']:
+			editedItem.name = request.form['name']
+			editedItem.description = request.form['description']
+			editedItem.price = request.form['price']
+			editedItem.category_id = request.form['category']
+			session.add(editedItem)
+			session.commit()
+			flash("Item has been editted!")
+			return redirect(url_for('catalogMain'))
+		else:
+			item = session.query(CategoryItem).filter_by(id = item_id).one()
+			categories = session.query(Category).all()
+			return render_template('itemedit.html', item = item, categories = categories) 
 
 #Delete specific item
 @app.route('/catalog/categoryname/itemname/delete')

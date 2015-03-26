@@ -1,4 +1,7 @@
 <html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
 <body>
 
 	<h1>Catalog</h1>
@@ -29,10 +32,21 @@
 	<br>
 	<!-- Display a list of categories -->
 	{% for i in categories %}
-		<div class = 'categorylist'>
+		<div class = 'categorylist' >
 			<a href = '{{url_for('categoryItems', category_id = i.id) }}'>{{i.name}}</a>
 		</dive>
 	{% endfor %}
+
+	<br>
+	<h2> Item List: </h2>
+	<br>
+	<!-- Display a list of items -->
+		{% for i in items %}
+		<div class = 'listitems'>
+			<a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a>
+		</div>
+		{% endfor %}
+
 
 </body>
 </html>

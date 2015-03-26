@@ -7,7 +7,7 @@
 {% for i in items %}
 		<div class = 'categorylist'>
 			<a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a>
-		</dive>
+		</div>
 {% endfor %}
 
 </body>

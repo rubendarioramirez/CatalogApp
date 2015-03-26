@@ -4,6 +4,39 @@
 
 <h1>Edit {{ item.name }}</h1>
 
+
+<form action="{{url_for('itemEdit', category_id = item.category_id, item_id = item.id )}}" method = 'POST'>
+
+<p>Name:</p>
+
+<input type='text' size='30' name='name' placeholder='{{ item.name }}'>
+
+<br>
+
+<p>Description:</p>
+
+<input type='text' size='30' name='description' placeholder=' {{ item.description }} '>
+
+<br>
+
+<p>Price:</p>
+
+<input type='text' size='30' name='price' placeholder= '{{ item.price }}'>
+
+<br>
+
+<p>Category:</p>
+	
+<select name='category'>
+	{% for i in categories %}
+  		<option value='{{i.id}}'>{{i.name}}</option>
+  	{% endfor %}
+</select>
+	
+<input type='submit' value='Update'>
+
+</form>
+
 </body>
 
 </html>

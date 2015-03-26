@@ -1,0 +1,18 @@
+<html>
+
+<body>
+
+<h1>{{ item.name }}</h1>
+
+<p> Description </p>
+<br>
+<a> {{ item.description}} </a>
+<a> {{ item.price }} </a>
+
+<br>
+<a href = '{{url_for('itemEdit', category_id = item.category_id, item_id = item.id) }}'>Edit</a>
+<br>
+<a href = '{{url_for('itemDelete') }}'>Delete</a>
+</body>
+
+</html>
