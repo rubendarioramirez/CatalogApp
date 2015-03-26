@@ -2,7 +2,13 @@
 
 <body>
 
-<h1>Im a specific caterory and you can check my items!</h1>
+<h1>Item List</h1>
+
+{% for i in items %}
+		<div class = 'categorylist'>
+			<a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a>
+		</dive>
+{% endfor %}
 
 </body>
 

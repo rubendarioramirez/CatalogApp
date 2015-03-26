@@ -1,0 +1,47 @@
+<html>
+
+<body>
+
+<h1>Add an item</h1>
+
+<form action="{{url_for('addItem')}}" method = 'POST'>
+
+<p>Name:</p>
+
+<input type='text' size='30' name='name'>
+
+<br>
+
+<p>Description:</p>
+
+<input type='text' size='30' name='description'>
+
+<br>
+
+<p>Price:</p>
+
+<input type='text' size='30' name='price'>
+
+<br>
+
+<p>Category:</p>
+
+	
+<select name='category'>
+	{% for i in categories %}
+  		<option value='{{i.id}}'>{{i.name}}</option>
+  	{% endfor %}
+</select>
+	
+
+
+<input type='submit' value='Create'>
+
+<!-- category_id = Column(Integer,ForeignKey('category.id')) -->
+
+
+</form>
+
+</body>
+
+</html>

@@ -3,7 +3,13 @@
 
 	<h1>Catalog</h1>
 
+	<!-- URL for create a new category -->
 	<a href = '{{url_for('addCategory') }}'>Create a new Category</a>
+	<br>
+
+	<!-- URL for create a new item -->
+	<a href = '{{url_for('addItem') }}'>Create a new Item</a>
+
 
 	<!-- Flashing message to confirm category was properly created -->
 	<div class = 'flash'>
@@ -19,10 +25,13 @@
 	</div>
 
 
+	<h2> Category List: </h2>
+	<br>
 	<!-- Display a list of categories -->
 	{% for i in categories %}
-		<div class = 'nameAndPrice'>
-		<span class = 'name'><p>{{i.name}}</p></span>
+		<div class = 'categorylist'>
+			<a href = '{{url_for('categoryItems', category_id = i.id) }}'>{{i.name}}</a>
+		</dive>
 	{% endfor %}
 
 </body>

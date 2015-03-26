@@ -30,18 +30,38 @@ def addCategory():
 	else:
 		return render_template('addcategory.html')
 
-@app.route('/catalog/categoryname/items')
-def categoryItems():
-	return render_template('categoryitems.html')
+#Add new item function
+@app.route('/catalog/additem', methods=['GET','POST'])
+def addItem():
+	if request.method == 'POST':
+		newItem = CategoryItem(name = request.form['name'], description = request.form['description'], price = request.form['price'], category_id = request.form['category'])
+		session.add(newItem)
+		session.commit()
+		flash("New item created!")
+		return redirect(url_for('catalogMain'))
+	else:
+		categories = session.query(Category).all()
+		return render_template('additem.html',categories=categories)
 
-@app.route('/catalog/categoryname/itemname')
-def item():
-	return render_template('item.html') 
+#All items for an specific category
+@app.route('/catalog/<int:category_id>/items')
+def categoryItems(category_id):
+	items = session.query(CategoryItem).filter_by(category_id = category_id)
+	return render_template('categoryitems.html', items = items)
 
-@app.route('/catalog/categoryname/itemname/edit')
-def itemEdit():
-	return render_template('itemedit.html') 
+#Check specific item on specific category
+@app.route('/catalog/<int:category_id>/<int:item_id>')
+def item(category_id, item_id):
+	item = session.query(CategoryItem).filter_by(id = item_id).one()
+	return render_template('item.html', item = item) 
 
+#Edit specific item
+@app.route('/catalog/<int:category_id>/<int:item_id>/edit')
+def itemEdit(category_id, item_id):
+	item = session.query(CategoryItem).filter_by(id = item_id).one()
+	return render_template('itemedit.html', item = item) 
+
+#Delete specific item
 @app.route('/catalog/categoryname/itemname/delete')
 def itemDelete():
 	return render_template('itemdelete.html') 
