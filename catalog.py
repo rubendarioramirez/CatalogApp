@@ -196,6 +196,8 @@ def gdisconnect():
 #Add new category function
 @app.route('/catalog/addcategory', methods=['GET','POST'])
 def addCategory():
+	if 'username' not in login_session:
+		return redirect('/login')
 	if request.method == 'POST':
 		newCategory = Category(name = request.form['name'])
 		session.add(newCategory)
@@ -208,6 +210,8 @@ def addCategory():
 #Add new item function
 @app.route('/catalog/additem', methods=['GET','POST'])
 def addItem():
+	if 'username' not in login_session:
+		return redirect('/login')
 	if request.method == 'POST':
 		newItem = CategoryItem(name = request.form['name'], description = request.form['description'], price = request.form['price'], category_id = request.form['category'])
 		session.add(newItem)
@@ -234,6 +238,8 @@ def item(category_id, item_id):
 #Edit specific item
 @app.route('/catalog/<int:category_id>/<int:item_id>/edit', methods=['GET','POST'])
 def itemEdit(category_id, item_id):
+	if 'username' not in login_session:
+		return redirect('/login')
 	editedItem = session.query(CategoryItem).filter_by(id = item_id).one()
 	if request.method == 'POST':
 		if request.form['name']:
@@ -253,6 +259,8 @@ def itemEdit(category_id, item_id):
 #Delete specific item
 @app.route('/catalog/<int:category_id>/<int:item_id>/delete', methods = ['GET','POST'] )
 def itemDelete(category_id, item_id):
+	if 'username' not in login_session:
+		return redirect('/login')
 	itemToDelete = session.query(CategoryItem).filter_by(id = item_id).one() 
 	if request.method == 'POST':
 		session.delete(itemToDelete)
