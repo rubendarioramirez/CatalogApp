@@ -1,51 +1,61 @@
 <html>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <head>
+ <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">  --> 
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='freelancer.css') }}">
+
 </head>
 <body>
 
-	<h1>Catalog</h1>
 
-	<!-- URL for create a new category -->
-	<a href = '{{url_for('addCategory') }}'>Create a new Category</a>
-	<br>
-
-	<!-- URL for create a new item -->
-	<a href = '{{url_for('addItem') }}'>Create a new Item</a>
-
+		<ul class="nav nav-pills">
+		  <li role="presentation" class="active"><a>Catalog</a></li>
+		  <li role="presentation" ><a href = '{{url_for('addCategory') }}'>Create a new Category</a></li>
+		  <li role="presentation"><a href = '{{url_for('addItem') }}'>Create a new Item</a></li>
+		</ul>
+		<br>
 
 	<!-- Flashing message to confirm category was properly created -->
 	<div class = 'flash'>
 	{% with messages = get_flashed_messages() %}
       {% if messages %}      
-        <ul>
-        {% for message in messages %}
-            <li> <strong> {{ message }} </strong> </li>
-        {% endfor %}
-        </ul>
+        	{% for message in messages %}
+	         <ul>
+		        <div class="alert alert-success" role="alert">{{ message }}</div>
+		     </ul>
+        	{% endfor %}
         {% endif %}
     {% endwith %}
 	</div>
-
-
-	<h2> Category List: </h2>
-	<br>
-	<!-- Display a list of categories -->
-	{% for i in categories %}
-		<div class = 'two-col' >
-			<a href = '{{url_for('categoryItems', category_id = i.id) }}'>{{i.name}}</a>
-		</dive>
-	{% endfor %}
-
-	<br>
-	<h2> Item List: </h2>
-	<br>
-	<!-- Display a list of items -->
-		{% for i in items %}
-		<div class = 'two-col'>
-			<a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a>
+	<!-- Begin Category list --> 
+	<div class="panel panel-default">
+	  	<div class="panel-heading">
+	    	<h3 class="panel-title">Category List</h3>
+	 	 </div>
+	  	<div class="panel-body">
+	  	<!-- Display a list of categories -->
+			<ul class="list-group">
+				{% for i in categories %}		
+				 	 <li class="list-group-item"><a href = '{{url_for('categoryItems', category_id = i.id) }}'>{{i.name}}</a></li>
+				{% endfor %}
+			</ul>
 		</div>
-		{% endfor %}
+	</div>
+	<!-- Begin item list -->
+	<div class="panel panel-default">
+	  	<div class="panel-heading">
+	    	<h3 class="panel-title">Last 10 Items</h3>
+	 	 </div>
+	  	<div class="panel-body">
+	  	<!-- Display a list of categories -->
+			<ul class="list-group">
+					{% for i in items %}
+					<li class="list-group-item"><a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
 
 
 </body>

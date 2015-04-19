@@ -1,18 +1,36 @@
 <html>
-
+<head>
+ <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">  --> 
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='freelancer.css') }}">
+</head>
 <body>
-
-<h1>{{ item.name }}</h1>
-
-<p> Description </p>
+<ul class="nav nav-pills">
+	<li role="presentation" ><a href = '{{url_for('catalogMain') }}'>Catalog </a></li>
+	<li role="presentation" ><a href = '{{url_for('addCategory') }}'>Create a new Category</a></li>
+	<li role="presentation"><a href = '{{url_for('addItem') }}'>Create a new Item</a></li>
+	<li role="presentation" class="active"> <a>{{ item.name }}</a></li>
+</ul>
 <br>
-<a> {{ item.description}} </a>
-<a> {{ item.price }} </a>
 
-<br>
-<a href = '{{url_for('itemEdit', category_id = item.category_id, item_id = item.id) }}'>Edit</a>
-<br>
-<a href = '{{url_for('itemDelete',  category_id = item.category_id, item_id = item.id) }}'>Delete</a>
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="/static/itemimage.png" alt="Udacity Rocks">
+      <div class="caption">
+        <h3>{{ item.name }}</h3>
+        <p> {{ item.description }} </p>
+        <p> {{ item.price }} </p>
+      <p>
+        <a href='{{url_for('itemEdit', category_id = item.category_id, item_id = item.id) }}' class="btn btn-primary" role="button">Edit</a> 
+        <a href='{{url_for('itemDelete',  category_id = item.category_id, item_id = item.id) }}' class="btn btn-default" role="button">Delete </a>
+      </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 
 </html>

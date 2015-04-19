@@ -1,14 +1,30 @@
 <html>
-
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='freelancer.css') }}">
+</head>
 <body>
-
-<h1>Item List</h1>
-
-{% for i in items %}
-		<div class = 'categorylist'>
-			<a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a>
+<ul class="nav nav-pills">
+	<li role="presentation" ><a href = '{{url_for('catalogMain') }}'>Catalog </a></li>
+	<li role="presentation" ><a href = '{{url_for('addCategory') }}'>Create a new Category</a></li>
+	<li role="presentation"><a href = '{{url_for('addItem') }}'>Create a new Item</a></li>
+	<li role="presentation" class="active"> <a>{{ category.name  }}</a></li>
+</ul>
+<br>
+	<div class="panel panel-default">
+	  	<div class="panel-heading">
+	    	<h3 class="panel-title">Item List</h3>
+	 	 </div>
+	  	<div class="panel-body">
+	  	<!-- Display a list of categories -->
+			<ul class="list-group">
+				{% for i in items %}	
+				 	 <li class="list-group-item"><a href = '{{url_for('item', category_id = i.category_id, item_id = i.id) }}'>{{i.name}}</a></li>
+				{% endfor %}
+			</ul>
 		</div>
-{% endfor %}
+	</div>
 
 </body>
 
