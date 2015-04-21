@@ -29,10 +29,6 @@ UPLOAD_FOLDER = 'static/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-## Import for ATOM RSS Feed ####
-from urlparse import urljoin
-from werkzeug.contrib.atom import AtomFeed
-
 ### Import to perform CRUD actions in the database ####
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -43,15 +39,6 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
-def make_external(url):
-    return urljoin(request.url_root, url)
-
-@app.route('/recent.atom')
-def recent_feed():
-    feed = AtomFeed('Recent Articles', feed_url=request.url, url=request.url_root)
-    items = session.query(CategoryItem).limit(10).all()
-    return feed.get_response()
 
 #Main page - Function to display categories
 @app.route('/')

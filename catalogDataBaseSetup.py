@@ -45,6 +45,9 @@ class CategoryItem(Base):
         'description':  self.description,
         'id':   self.id,
         'price':    self.price,
+        'picture':  self.picture,
+        'category_id': self.category_id,
+
         }
 
 engine = create_engine('sqlite:///catalogUpdated.db')
