@@ -17,6 +17,7 @@
 <div class="input-group input-group-lg">
   <span class="input-group-addon" id="sizing-addon1">Name:</span>
   <input type="text" class="form-control" name='name' aria-describedby="sizing-addon1">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 </div>
 
 <input type='submit' value='Create'>

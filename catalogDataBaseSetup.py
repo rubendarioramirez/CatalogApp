@@ -31,6 +31,7 @@ class CategoryItem(Base):
     id = Column(Integer, primary_key = True)
     description = Column(String(250))
     price = Column(String(8))
+    picture = Column(String(250))
     category_id = Column(Integer,ForeignKey('category.id'))
     category = relationship(Category) 
     user_id = Column(Integer,ForeignKey('user.id'))
@@ -46,7 +47,7 @@ class CategoryItem(Base):
         'price':    self.price,
         }
 
-engine = create_engine('sqlite:///catalogUser.db')
+engine = create_engine('sqlite:///catalogUpdated.db')
 
 Base.metadata.create_all(engine)
 

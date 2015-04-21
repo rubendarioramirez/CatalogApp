@@ -1,14 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 app = Flask(__name__)
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from catalogDataBaseSetup import Base, Category, CategoryItem, User
+### Anti CSRF Helper import ###
+from flask.ext.seasurf import SeaSurf
+### Make the app an object of SeaSurf to protect from CSRF
+csrf = SeaSurf(app)
 
+## IMPORT FOR LOGIN ####
 from flask import session as login_session
 import random, string
 
-#IMPORTS FOR THIS STEP
+### IMPORT FOR AUTHENTICATION ####
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -20,11 +22,36 @@ import requests
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME= "Catalog App"
 
-engine = create_engine('sqlite:///catalogUser.db')
+### Import and config for picture upload ####
+import os
+from werkzeug import secure_filename
+UPLOAD_FOLDER = 'static/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+## Import for ATOM RSS Feed ####
+from urlparse import urljoin
+from werkzeug.contrib.atom import AtomFeed
+
+### Import to perform CRUD actions in the database ####
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from catalogDataBaseSetup import Base, Category, CategoryItem, User
+
+engine = create_engine('sqlite:///catalogUpdated.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+def make_external(url):
+    return urljoin(request.url_root, url)
+
+@app.route('/recent.atom')
+def recent_feed():
+    feed = AtomFeed('Recent Articles', feed_url=request.url, url=request.url_root)
+    items = session.query(CategoryItem).limit(10).all()
+    return feed.get_response()
 
 #Main page - Function to display categories
 @app.route('/')
@@ -33,6 +60,7 @@ def catalogMain():
 	items = session.query(CategoryItem).all()
 	return render_template('catalog.html', categories=categories, items=items)
 
+##Main G+ login function ###
 @app.route('/login')
 def showLogin():
   state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
@@ -40,6 +68,8 @@ def showLogin():
   #return "The current session state is %s" % login_session['state']
   return render_template('login.html', STATE = state)
 
+##Gconnect is exempt of CSRF for login purposes.
+@csrf.exempt
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
   
@@ -138,7 +168,6 @@ def gconnect():
   flash("you are now logged in as %s"%login_session['username'])
   return output
 
-
 #User Helper Functions
 def createUser(login_session):
   newUser = User(name = login_session['username'], email = login_session['email'], picture = login_session['picture'])
@@ -207,20 +236,29 @@ def addCategory():
 	else:
 		return render_template('addcategory.html')
 
+### Determine if the fileuploaded it's allowed ###
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 #Add new item function
 @app.route('/catalog/additem', methods=['GET','POST'])
 def addItem():
-	if 'username' not in login_session:
-		return redirect('/login')
-	if request.method == 'POST':
-		newItem = CategoryItem(name = request.form['name'], description = request.form['description'], price = request.form['price'], category_id = request.form['category'])
-		session.add(newItem)
-		session.commit()
-		flash("New item created!")
-		return redirect(url_for('catalogMain'))
-	else:
-		categories = session.query(Category).all()
-		return render_template('additem.html',categories=categories)
+  if 'username' not in login_session:
+    return redirect('/login')
+  if request.method == 'POST':
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+      filename = secure_filename(file.filename)
+      file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+      newItem = CategoryItem(name = request.form['name'], description = request.form['description'], price = request.form['price'], picture = filename, category_id = request.form['category'])
+      session.add(newItem)
+      session.commit()
+      flash("New item created!")
+      return redirect(url_for('catalogMain'))
+  else:
+    categories = session.query(Category).all()
+    return render_template('additem.html',categories=categories)
 
 #All items for an specific category
 @app.route('/catalog/<int:category_id>/items')
