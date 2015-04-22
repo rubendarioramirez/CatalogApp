@@ -21,6 +21,7 @@ pip install flask
 pip install sqlalchemy
 pip install requests
 pip install oauth2client
+pip install flask-seasurf
 
 ###LOGIN####
 In order to Login you should

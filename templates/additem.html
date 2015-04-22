@@ -3,6 +3,32 @@
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='freelancer.css') }}">
+
+<!-- Form validation script -->
+<script>
+function checkform()
+{
+  if (document.newItem.name.value == '') {
+    alert("Please input a name for the item")
+  return false;
+  }
+  else if (document.newItem.description.value == ''){
+    alert("Please add a description for the item")
+  return false;
+  }
+  else if (document.newItem.price.value == ''){
+    alert("Please add a price for the item")
+  return false;
+  }
+  else if (document.newItem.file.value == ''){
+    alert("Please add a picture for the item")
+  return false;
+  }
+  return true;
+}
+</script>
+<!-- End validation script -->
+
 </head>
 <body>
 <ul class="nav nav-pills">
@@ -10,9 +36,10 @@
 	<li role="presentation" ><a href = '{{url_for('addCategory') }}'>Create a new Category</a></li>
 	<li role="presentation" class="active"><a href = '{{url_for('addItem') }}'>Create a new Item</a></li>
 </ul>
-<h1>Add an item</h1>
 
-<form action="{{url_for('addItem')}}" method='POST' enctype='multipart/form-data'>
+<h1>Add a new item</h1>
+
+<form name='newItem' action="{{url_for('addItem')}}" method='POST' onSubmit='return checkform()' enctype='multipart/form-data'>
 
 <div class="input-group input-group-lg">
   <span class="input-group-addon" id="sizing-addon1">Name:</span>
